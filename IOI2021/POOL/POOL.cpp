@@ -34,7 +34,29 @@ int getDifference(int* array, int count, int targetCapacity)
         }
         else if (i == count - 1)
         {
-            difference += extractDifferenceFromMidElements(mid_elements, left_element);
+            mid_elements.push_back(array[i]);
+            mid_elements.insert(mid_elements.begin(), left_element);
+            left_element = mid_elements[mid_elements.size() - 1];
+            std::vector<int> extra_mid_elements;
+
+            for (int i = mid_elements.size() - 2; i >= 0; i--)
+            {
+                if (mid_elements[i] > left_element)
+                {
+                    difference += extractDifferenceFromMidElements(extra_mid_elements, left_element);
+                    left_element = mid_elements[i];
+                    extra_mid_elements.clear();
+                }
+                else if (i == 0)
+                {
+                    difference += extractDifferenceFromMidElements(extra_mid_elements, left_element);
+                }
+                else
+                {
+                    extra_mid_elements.push_back(mid_elements[i]);
+                }
+            }
+            //difference += extractDifferenceFromMidElements(mid_elements, left_element);
         }
         else
         {
