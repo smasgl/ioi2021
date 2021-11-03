@@ -23,7 +23,7 @@ int main()
     int possibleWater = fieldSum - elementSum;
     // Start measuring time
     //auto begin = std::chrono::high_resolution_clock::now();
-    
+
     int maxElementIndex = 0;
     int travelDistance = 0;
     int maxElementInRangeIndex = -1;
@@ -33,28 +33,36 @@ int main()
         if (elements[i] > elements[maxElementIndex])
         {
             maxElementIndex = i;
-            possibleWater -= (elementsCount - elements[i] + 1) * travelDistance;
+            possibleWater -= (elements[maxElementIndex] - elements[maxElementInRangeIndex]) * travelDistance;
             travelDistance = 0;
             maxElementInRangeIndex = -1;
         }
         else if (i == elementsCount - 1)
         {
+            if (maxElementInRangeIndex == -1 || elements[i] > elements[maxElementInRangeIndex])
+            {
+                maxElementInRangeIndex = i;
+            }
+
+            possibleWater -= (elements[maxElementIndex] - elements[i]) * travelDistance;
             maxElementIndex = i;
-            possibleWater -= (elementsCount - elements[i] + 1) * travelDistance;
             travelDistance = 0;
 
-            if (maxElementInRangeIndex == elementsCount)
+            if (maxElementInRangeIndex == elementsCount - 1)
                 break;
             i = maxElementInRangeIndex;
             maxElementInRangeIndex = -1;
         }
-        else if(maxElementInRangeIndex == -1 || elements[i] > elements[maxElementInRangeIndex])
+        else if (maxElementInRangeIndex == -1 || elements[i] > elements[maxElementInRangeIndex])
         {
             maxElementInRangeIndex = i;
         }
 
         travelDistance++;
     }
+
+
+    std::cout << abs(possibleWater - targetCapacity) << "\n";
 
 
     // Stop measuring time and calculate the elapsed time

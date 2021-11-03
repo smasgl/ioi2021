@@ -2,29 +2,29 @@
 #include <vector>
 #include <chrono>
 
-void printArray(int* array, int count)
+void printArray(long* array, long count)
 {
-    for (int i = 0; i < count; i++)
+    for (long i = 0; i < count; i++)
         std::cout << array[i] << " ";
 }
 
-int extractDifferenceFromMidElements(std::vector<int> mid_elements, int comparer)
+long extractDifferenceFromMidElements(std::vector<long> mid_elements, long comparer)
 {
-    int difference = 0;
-    for (int i : mid_elements)
+    long difference = 0;
+    for (long i : mid_elements)
     {
         difference += comparer - i;
     }
     return difference;
 }
 
-int getDifference(int* array, int count, int targetCapacity)
+long getDifference(long* array, long count, long targetCapacity)
 {
-    int difference = 0;
-    int left_element = array[0];
-    std::vector<int> mid_elements;
+    long difference = 0;
+    long left_element = array[0];
+    std::vector<long> mid_elements;
 
-    for (int i = 1; i < count; i++)
+    for (long i = 1; i < count; i++)
     {
         if (array[i] > left_element)
         {
@@ -37,9 +37,9 @@ int getDifference(int* array, int count, int targetCapacity)
             mid_elements.push_back(array[i]);
             mid_elements.insert(mid_elements.begin(), left_element);
             left_element = mid_elements[mid_elements.size() - 1];
-            std::vector<int> extra_mid_elements;
+            std::vector<long> extra_mid_elements;
 
-            for (int i = mid_elements.size() - 2; i >= 0; i--)
+            for (long i = mid_elements.size() - 2; i >= 0; i--)
             {
                 if (mid_elements[i] > left_element)
                 {
@@ -70,15 +70,15 @@ int getDifference(int* array, int count, int targetCapacity)
 
 int main()
 {
-    int elementsCount, targetCapacity;
+    long elementsCount, targetCapacity;
     std::cin >> elementsCount >> targetCapacity;
-    int* elements = new int[elementsCount];
-    for (int i = 0; i < elementsCount; i++)
+    long* elements = new long[elementsCount];
+    for (long i = 0; i < elementsCount; i++)
         std::cin >> elements[i];
     // Start measuring time
     //auto begin = std::chrono::high_resolution_clock::now();
 
-    std::cout << getDifference(elements, elementsCount, targetCapacity) << "\n";
+    std::cout << abs(getDifference(elements, elementsCount, targetCapacity)) << "\n";
 
     // Stop measuring time and calculate the elapsed time
     //auto end = std::chrono::high_resolution_clock::now();
