@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 void printArray(int* array, int count)
 {
@@ -33,7 +34,7 @@ int getDifference(int* array, int count, int targetCapacity)
         }
         else if (i == count - 1)
         {
-            difference += extractDifferenceFromMidElements(mid_elements, array[i]);
+            difference += extractDifferenceFromMidElements(mid_elements, left_element);
         }
         else
         {
@@ -41,7 +42,7 @@ int getDifference(int* array, int count, int targetCapacity)
         }
     }
 
-    return difference - targetCapacity;
+    return abs(difference - targetCapacity);
 }
 
 
@@ -52,8 +53,15 @@ int main()
     int* elements = new int[elementsCount];
     for (int i = 0; i < elementsCount; i++)
         std::cin >> elements[i];
+    // Start measuring time
+    //auto begin = std::chrono::high_resolution_clock::now();
 
-    std::cout << getDifference(elements, elementsCount, targetCapacity);
+    std::cout << getDifference(elements, elementsCount, targetCapacity) << "\n";
 
-    //printArray(elements, elementsCount);
+    // Stop measuring time and calculate the elapsed time
+    //auto end = std::chrono::high_resolution_clock::now();
+    //auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+    //std::cout << "\n" << elapsed.count() * 1e-9 << "s";
+
+    printArray(elements, elementsCount);
 }
