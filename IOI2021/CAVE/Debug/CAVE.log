@@ -1,0 +1,6 @@
+﻿  grader.cpp
+C:\Users\lwnzim3\Downloads\cave-attachment\grader.cpp(53,11): warning C4473: 'scanf_s' : not enough arguments passed for format string
+C:\Users\lwnzim3\Downloads\cave-attachment\grader.cpp(53,11): message : placeholders and their parameters expect 2 variadic arguments, but 1 were provided
+C:\Users\lwnzim3\Downloads\cave-attachment\grader.cpp(53,11): message : the missing variadic argument 2 is required by format string '%s'
+C:\Users\lwnzim3\Downloads\cave-attachment\grader.cpp(53,11): message : this argument is used as a buffer size
+  CAVE.vcxproj -> C:\Users\lwnzim3\source\repos\ioi2021\IOI2021\Debug\CAVE.exe
