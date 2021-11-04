@@ -56,7 +56,6 @@ long getDifference(long* array, long count, long targetCapacity)
                     extra_mid_elements.push_back(mid_elements[i]);
                 }
             }
-            //difference += extractDifferenceFromMidElements(mid_elements, left_element);
         }
         else
         {
