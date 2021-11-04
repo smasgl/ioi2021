@@ -51,99 +51,87 @@ void printFielOfView(char fieldOfView[3][3])
 	}
 }
 
-//0 => not found
-//1 => up
-//2 => right
-//3 => down
-//4 => left
-//5 => up, right
-//6 => down, right
-//7 => down, left
-//8 => up, left
-unsigned char checktarget(char fieldOfView[3][3])
+//bit position
+// 1 2 3
+// 4 x 5
+// 6 7 8  => 1 2 3 4 5 6 7 8
+// every bit is responsible for a wall piece begining from up/left to down/right
+unsigned char checkObject(char objectLetter)
 {
-	if (fieldOfView[0][0] == 'X')
-		return 8;
-	else if (fieldOfView[0][1] == 'X')
-		return 4;
-	else if (fieldOfView[0][2] == 'X')
-		return 7;
-	else if (fieldOfView[1][0] == 'X')
-		return 1;
-	else if (fieldOfView[1][2] == 'X')
-		return 3;
-	else if (fieldOfView[2][0] == 'X')
-		return 5;
-	else if (fieldOfView[2][1] == 'X')
-		return 2;
-	else if (fieldOfView[2][2] == 'X')
-		return 6;
-	else
-		return 0;
-}
+	unsigned char map = 0b00000000;
 
+	if (fieldOfView[0][0] == objectLetter)
+		map |= 0b00000001; // 1 (1)
+	if (fieldOfView[0][1] == objectLetter)
+		map |= 0b00000010; // 2 (2)
+	if (fieldOfView[0][2] == objectLetter)
+		map |= 0b00000100; // 4 (3)
+	if (fieldOfView[1][0] == objectLetter)
+		map |= 0b00001000; // 8 (4)
+	if (fieldOfView[1][2] == objectLetter)
+		map |= 0b00010000; // 16 (5)
+	if (fieldOfView[2][0] == objectLetter)
+		map |= 0b00100000; // 32 (6)
+	if (fieldOfView[2][1] == objectLetter)
+		map |= 0b01000000; // 64 (7)
+	if (fieldOfView[2][2] == objectLetter)
+		map |= 0b10000000; // 128 (8)
+
+	return map;
+}
 
 
 void handleCaseOne()
 {
-	unsigned char target = checktarget(fieldOfView);
+	unsigned char targetMap = checkObject('X');
 
-	while (target == 0)
+	while (targetMap == 0)
 	{
-		switch (checkLetter(fieldOfView, '#'))
+		unsigned char wallMap = checkObject('#');
+		if ((wallMap & 16) > 0) // right wall
 		{
-			case 0:
-			case 1:
-			case 8:
-				right();
-				break;
-			case 2:
-			case 5:
-				down();
-				break;
-			case 3:
-			case 6:
+			if ((wallMap & 64) > 0) // bottom wall
 				left();
-				break;
-			case 4:
-			case 7:
+			else
+				down();
+		}
+		else if ((wallMap & 8) > 0) // left wall
+		{
+			if ((wallMap & 2) > 0) // top wall
+				right();
+			else
 				up();
 		}
+		else if ((wallMap & 64) > 0) // bottom wall
+			left();
+		else
+			right();
 
-		target = checktarget(fieldOfView);
+		targetMap = checkObject('X');
 	}
 
-	switch (target)
+	if ((targetMap & 7) > 0) // target in one of the three upper locations
 	{
-		case 1:
-			up();
-			break;
-		case 2:
-			right();
-			break;
-		case 3:
-			down();
-			break;
-		case 4:
-			left();
-			break;
-		case 5:
-			up();
-			right();
-			break;
-		case 6:
-			down();
-			right();
-			break;
-		case 7:
-			down();
-			left();
-			break;
-		case 8:
-			up();
-			left();
-	}
+		up();
 
+		if ((targetMap & 1) > 0) // up, left
+			left();
+		else if ((targetMap & 4) > 0) // up, right
+			right();
+	}
+	else if ((targetMap & 224)) // target in one of the three bottom locations
+	{
+		down();
+
+		if ((targetMap & 32) > 0) // down, left
+			left();
+		else if ((targetMap & 128) > 0) // down, right
+			right();
+	}
+	else if ((targetMap & 16) > 0) // right
+		right();
+	else // left
+		left();
 }
 
 void findExit(int subtask, char fieldOfView[3][3])
