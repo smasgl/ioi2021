@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 static const int MAX_N = 1005;
 
@@ -79,6 +80,51 @@ unsigned char checkObject(char objectLetter)
 
 	return map;
 }
+
+#pragma region Mahmoud
+
+// left		=> 1
+// down		=> 2
+// right	=> 3
+// up		=> 4
+std::vector<unsigned char> getAvailableDirections(unsigned char vectorFieldOfView[3][3])
+{
+	std::vector<unsigned char> directions;
+	if (vectorFieldOfView[0][1] == 3) // up
+		directions.push_back(4);
+	if (vectorFieldOfView[2][1] == 3) // down
+		directions.push_back(2);
+	if (vectorFieldOfView[1][0] == 3) // left
+		directions.push_back(1);
+	if (vectorFieldOfView[1][2] == 3) // right
+		directions.push_back(3);
+
+	return directions;
+}
+
+// left		=> 1
+// down		=> 2
+// right	=> 3
+// up		=> 4
+unsigned char getNextStep(unsigned char vectorFieldOfView[3][3])
+{
+	std::vector<unsigned char> directions = getAvailableDirections(vectorFieldOfView);
+
+	// no unvisited direction was found
+	if (directions.size() < 1)
+		// go back
+		return (vectorFieldOfView[1][1] - 4) / 10;
+	else if (directions.size() == 1)
+		return directions[0];
+	else
+	{
+		unsigned char randIndex = std::rand() % directions.size();
+		return directions[randIndex];
+	}
+}
+
+#pragma endregion
+
 
 void findExit(int subtask, char fieldOfView[3][3])
 {
