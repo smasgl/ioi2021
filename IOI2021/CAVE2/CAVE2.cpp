@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 static const int MAX_N = 1005;
 
@@ -80,10 +81,100 @@ unsigned char checkObject(char objectLetter)
 	return map;
 }
 
+#pragma region Simon
+
+unsigned char** vectorFieldOfView(std::vector<std::vector<unsigned char>> vectorField, int* playerPosition)
+{
+	unsigned char** newFieldOfView = 0;
+	newFieldOfView = new unsigned char* [3];
+	for (unsigned char i = 0; i < 3; i++)
+		newFieldOfView[i] = new unsigned char[3];
+
+	newFieldOfView[0][0] = vectorField[playerPosition[0] - 1][playerPosition[1] - 1];
+	newFieldOfView[0][1] = vectorField[playerPosition[0] - 1][playerPosition[1]];
+	newFieldOfView[0][2] = vectorField[playerPosition[0] - 1][playerPosition[1] + 1];
+	newFieldOfView[1][0] = vectorField[playerPosition[0]][playerPosition[1] - 1];
+	newFieldOfView[1][1] = vectorField[playerPosition[0]][playerPosition[1]];
+	newFieldOfView[1][2] = vectorField[playerPosition[0]][playerPosition[1] + 1];
+	newFieldOfView[2][0] = vectorField[playerPosition[0] + 1][playerPosition[1] - 1];
+	newFieldOfView[2][1] = vectorField[playerPosition[0] + 1][playerPosition[1]];
+	newFieldOfView[2][2] = vectorField[playerPosition[0] + 1][playerPosition[1] + 1];
+	return newFieldOfView;
+}
+
+void vectorMoveTo(std::vector<std::vector<unsigned char>> &vectorField, unsigned char direction, int* playerPosition)
+{
+	switch (direction)
+	{
+	case 1:	// Left
+		left();
+		playerPosition[1]--;	// X--
+		if (playerPosition[1] == 0)	// Resize Vector Front
+		{
+			for (int i = 0; i < vectorField.size(); i++)
+				vectorField[i].insert(vectorField[i].begin(), 0);
+
+			vectorField[playerPosition[0] - 1][playerPosition[1] - 1];
+		}
+		break;
+	case 2:	// Down
+		down();
+		playerPosition[0]++;	// Y++
+		if (playerPosition[0] == (vectorField.size() - 1))	// Resize Vector Bottom
+		{
+			vectorField.insert(vectorField.end(), std::vector<unsigned char>(0));
+			for (int i = 0; i < vectorField[1].size(); i++)
+				vectorField[vectorField.size()-1].push_back(0);
+
+
+		}
+		break;
+	case 3:	// Right
+		right();
+		playerPosition[1]++;	// X++
+		if (playerPosition[1] == (vectorField[0].size() - 1)) // Resize Vector Back
+		{
+			for (int i = 0; i < vectorField.size(); i++)
+				vectorField[i].insert(vectorField[i].end(), 0);
+
+
+		}
+		break;
+	case 4:	// Up
+		up();
+		playerPosition[0]--;	// Y--
+		if (playerPosition[0] == 0)	// Resize Vector Top
+		{
+			vectorField.insert(vectorField.begin(), std::vector<unsigned char>(0));
+			for (int i = 0; i < vectorField[1].size(); i++)
+				vectorField[0].push_back(0);
+
+
+		}
+		break;
+	}
+}
+
+#pragma endregion
+
 void findExit(int subtask, char fieldOfView[3][3])
 {
-	
+	int playerPosition[] = { 1,1 };
+
+	std::vector<std::vector<unsigned char>> vectorField;
+	for (unsigned char i = 0; i < 3; i++)
+	{
+		std::vector<unsigned char> temp;
+		for (unsigned char i = 0; i < 3; i++)
+		{
+			temp.push_back(0);
+		}
+		vectorField.push_back(temp);
+	}
+
+	vectorMoveTo(vectorField, 4, playerPosition);
 }
+
 
 int main()
 {

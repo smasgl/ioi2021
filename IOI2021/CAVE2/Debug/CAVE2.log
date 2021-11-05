@@ -1,7 +1,6 @@
 ﻿  CAVE2.cpp
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(18,20): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=unsigned char
-          ]
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(114,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(124,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(133,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(143,22): warning C4018: '<': signed/unsigned mismatch
   CAVE2.vcxproj -> C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\Debug\CAVE2.exe
