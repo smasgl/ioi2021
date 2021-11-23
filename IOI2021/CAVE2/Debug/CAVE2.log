@@ -1,6 +1,8 @@
 ﻿  CAVE2.cpp
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(114,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(124,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(133,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(143,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(121,60): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned char', possible loss of data
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(178,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(194,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(208,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(223,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(167): warning C4715: 'viewToVectorSight': not all control paths return a value
   CAVE2.vcxproj -> C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\Debug\CAVE2.exe
