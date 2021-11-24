@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <thread>
 
 static const int MAX_N = 1005;
 
@@ -48,7 +50,55 @@ void printFielOfView(char fieldOfView[3][3])
 		{
 			std::cout << fieldOfView[i][j];
 		}
-		std::cout << std::endl;
+		std::cout << '\n';
+	}
+
+	std::cout << "--------------------\n";
+}
+
+unsigned char viewToVectorSight(char field)
+{
+	switch (field)
+	{
+	case '#':
+		return 10;
+		break;
+	case 'X':
+		return 20;
+		break;
+	case '.':
+		return 30;
+		break;
+	case 'S':
+		return 40;
+		break;
+	}
+}
+
+unsigned char vectorToViewSight(char field)
+{
+	if (field >= 10 && field < 20)
+		return '#';
+	if (field >= 20 && field < 30)
+		return 'X';
+	if (field >= 30 && field < 40)
+		return '.';
+	if (field >= 40 && field < 50)
+		return 'S';
+
+	return 'O';
+}
+
+void drawField(std::vector<std::vector<unsigned char>>& vectorField)
+{
+	std::cout << "\033[2J";
+	for (int i = 0; i < vectorField.size(); i++)
+	{
+		for (int j = 0; j < vectorField[0].size(); j++)
+		{
+			std::cout << vectorToViewSight(vectorField[i][j]);
+		}
+		std::cout << '\n';
 	}
 }
 
@@ -81,22 +131,63 @@ unsigned char checkObject(char objectLetter)
 	return map;
 }
 
-#pragma region Mahmoud
+#pragma region DecisionMaking
 
 // left		=> 1
 // down		=> 2
 // right	=> 3
 // up		=> 4
-std::vector<unsigned char> getAvailableDirections(unsigned char vectorFieldOfView[3][3])
+std::vector<unsigned char> getAvailableDirections(unsigned char** vectorFieldOfView)
 {
+	// Next To Finish
+	if (vectorFieldOfView[0][1] == 20) // up
+		return { 4 };
+	if (vectorFieldOfView[2][1] == 20) // down
+		return { 2 };
+	if (vectorFieldOfView[1][0] == 20) // left
+		return { 1 };
+	if (vectorFieldOfView[1][2] == 20) // right
+		return { 3 };
+
+	// Finish in Corners
+	if (vectorFieldOfView[0][0] == 20)
+	{
+		if (vectorFieldOfView[0][1] % 30 == 0) // up
+			return { 4 };
+		if (vectorFieldOfView[1][0] % 30 == 0) // left
+			return { 1 };
+	}
+	else if (vectorFieldOfView[0][2] == 20)
+	{
+		if (vectorFieldOfView[0][1] % 30 == 0) // up
+			return { 4 };
+		if (vectorFieldOfView[1][2] % 30 == 0) // right
+			return { 3 };
+	}
+	else if (vectorFieldOfView[2][2] == 20)
+	{
+		if (vectorFieldOfView[1][2] % 30 == 0) // right
+			return { 3 };
+		if (vectorFieldOfView[2][1] % 30 == 0) // down
+			return { 2 };
+	}
+	else if (vectorFieldOfView[2][0] == 20)
+	{
+		if (vectorFieldOfView[1][0] % 30 == 0) // left
+			return { 1 };
+		if (vectorFieldOfView[2][1] % 30 == 0) // down
+			return { 2 };
+	}
+
+	// No Finish in sight
 	std::vector<unsigned char> directions;
-	if (vectorFieldOfView[0][1] == 3) // up
+	if (vectorFieldOfView[0][1] % 30 == 0) // up
 		directions.push_back(4);
-	if (vectorFieldOfView[2][1] == 3) // down
+	if (vectorFieldOfView[2][1] % 30 == 0) // down
 		directions.push_back(2);
-	if (vectorFieldOfView[1][0] == 3) // left
+	if (vectorFieldOfView[1][0] % 30 == 0) // left
 		directions.push_back(1);
-	if (vectorFieldOfView[1][2] == 3) // right
+	if (vectorFieldOfView[1][2] % 30 == 0) // right
 		directions.push_back(3);
 
 	return directions;
@@ -106,18 +197,19 @@ std::vector<unsigned char> getAvailableDirections(unsigned char vectorFieldOfVie
 // down		=> 2
 // right	=> 3
 // up		=> 4
-unsigned char getNextStep(unsigned char vectorFieldOfView[3][3])
+unsigned char getNextStep(unsigned char** vectorFieldOfView)
 {
 	std::vector<unsigned char> directions = getAvailableDirections(vectorFieldOfView);
 
 	// no unvisited direction was found
 	if (directions.size() < 1)
 		// go back
-		return (vectorFieldOfView[1][1] - 4) / 10;
+		return (vectorFieldOfView[1][1] % 10);
 	else if (directions.size() == 1)
 		return directions[0];
 	else
 	{
+		std::srand(std::time(0));
 		unsigned char randIndex = std::rand() % directions.size();
 		return directions[randIndex];
 	}
@@ -126,7 +218,7 @@ unsigned char getNextStep(unsigned char vectorFieldOfView[3][3])
 #pragma endregion
 
 
-#pragma region Simon
+#pragma region Movement
 
 unsigned char** vectorFieldOfView(std::vector<std::vector<unsigned char>> vectorField, int* playerPosition)
 {
@@ -147,27 +239,10 @@ unsigned char** vectorFieldOfView(std::vector<std::vector<unsigned char>> vector
 	return newFieldOfView;
 }
 
-unsigned char viewToVectorSight(char field)
-{
-	switch (field)
-	{
-		case '#':
-			return 10;
-			break;
-		case 'X':
-			return 20;
-			break;
-		case '.':
-			return 30;
-			break;
-		case 'S':
-			return 40;
-			break;
-	}
-}
-
 void vectorMoveTo(std::vector<std::vector<unsigned char>> &vectorField, unsigned char direction, int* playerPosition)
 {
+	//std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	drawField(vectorField);
 	switch (direction)
 	{
 		case 1:	// Left
@@ -179,9 +254,15 @@ void vectorMoveTo(std::vector<std::vector<unsigned char>> &vectorField, unsigned
 					vectorField[i].insert(vectorField[i].begin(), 0);
 				playerPosition[1]++;	// Reset Player Position because adding row led to offset
 			}
-			vectorField[playerPosition[0] - 1][playerPosition[1] - 1] = viewToVectorSight(fieldOfView[0][0]);	// X 0 0
-			vectorField[playerPosition[0]][playerPosition[1] - 1] = viewToVectorSight(fieldOfView[1][0]);		// X 0 0
-			vectorField[playerPosition[0] + 1][playerPosition[1] - 1] = viewToVectorSight(fieldOfView[2][0]);	// X 0 0
+			vectorField[playerPosition[0] - 1][playerPosition[1] - 1] = (vectorField[playerPosition[0] - 1][playerPosition[1] - 1] == 0)
+				? viewToVectorSight(fieldOfView[0][0])
+				: vectorField[playerPosition[0] - 1][playerPosition[1] - 1];	// X 0 0
+			vectorField[playerPosition[0]][playerPosition[1] - 1] = (vectorField[playerPosition[0]][playerPosition[1] - 1] == 0)
+				? viewToVectorSight(fieldOfView[1][0])
+				: vectorField[playerPosition[0]][playerPosition[1] - 1];		// X 0 0
+			vectorField[playerPosition[0] + 1][playerPosition[1] - 1] = (vectorField[playerPosition[0] + 1][playerPosition[1] - 1] == 0)
+				? viewToVectorSight(fieldOfView[2][0])
+				: vectorField[playerPosition[0] + 1][playerPosition[1] - 1];	// X 0 0
 			if (vectorField[playerPosition[0]][playerPosition[1]] % 10 == 0)
 				vectorField[playerPosition[0]][playerPosition[1]] = 43;	// Came from
 			break;
@@ -194,9 +275,15 @@ void vectorMoveTo(std::vector<std::vector<unsigned char>> &vectorField, unsigned
 				for (int i = 0; i < vectorField[1].size(); i++)
 					vectorField[vectorField.size()-1].push_back(0);
 			}
-			vectorField[playerPosition[0] + 1][playerPosition[1] - 1] = viewToVectorSight(fieldOfView[2][0]);	// 0 0 0
-			vectorField[playerPosition[0] + 1][playerPosition[1]] = viewToVectorSight(fieldOfView[2][1]);		// 0 0 0
-			vectorField[playerPosition[0] + 1][playerPosition[1] + 1] = viewToVectorSight(fieldOfView[2][2]);	// X X X
+			vectorField[playerPosition[0] + 1][playerPosition[1] - 1] = (vectorField[playerPosition[0] + 1][playerPosition[1] - 1] == 0) 
+				? viewToVectorSight(fieldOfView[2][0])
+				: vectorField[playerPosition[0] + 1][playerPosition[1] - 1];	// 0 0 0
+			vectorField[playerPosition[0] + 1][playerPosition[1]] = (vectorField[playerPosition[0] + 1][playerPosition[1]] == 0)
+				? viewToVectorSight(fieldOfView[2][1])
+				: vectorField[playerPosition[0] + 1][playerPosition[1]];		// 0 0 0
+			vectorField[playerPosition[0] + 1][playerPosition[1] + 1] = (vectorField[playerPosition[0] + 1][playerPosition[1] + 1] == 0)
+				? viewToVectorSight(fieldOfView[2][2])
+				: vectorField[playerPosition[0] + 1][playerPosition[1] + 1];	// X X X
 			if (vectorField[playerPosition[0]][playerPosition[1]] % 10 == 0)
 				vectorField[playerPosition[0]][playerPosition[1]] = 44;	// Came from
 			break;
@@ -208,9 +295,15 @@ void vectorMoveTo(std::vector<std::vector<unsigned char>> &vectorField, unsigned
 				for (int i = 0; i < vectorField.size(); i++)
 					vectorField[i].insert(vectorField[i].end(), 0);
 			}
-			vectorField[playerPosition[0] - 1][playerPosition[1] + 1] = viewToVectorSight(fieldOfView[0][2]);	// 0 0 X
-			vectorField[playerPosition[0]][playerPosition[1] + 1] = viewToVectorSight(fieldOfView[1][2]);		// 0 0 X
-			vectorField[playerPosition[0] + 1][playerPosition[1] + 1] = viewToVectorSight(fieldOfView[2][2]);	// 0 0 X
+			vectorField[playerPosition[0] - 1][playerPosition[1] + 1] = (vectorField[playerPosition[0] - 1][playerPosition[1] + 1] == 0) 
+				? viewToVectorSight(fieldOfView[0][2]) 
+				: vectorField[playerPosition[0] - 1][playerPosition[1] + 1];	// 0 0 X
+			vectorField[playerPosition[0]][playerPosition[1] + 1] = (vectorField[playerPosition[0]][playerPosition[1] + 1] == 0) 
+				? viewToVectorSight(fieldOfView[1][2]) 
+				: vectorField[playerPosition[0]][playerPosition[1] + 1];		// 0 0 X
+			vectorField[playerPosition[0] + 1][playerPosition[1] + 1] = (vectorField[playerPosition[0] + 1][playerPosition[1] + 1] == 0) 
+				? viewToVectorSight(fieldOfView[2][2]) 
+				: vectorField[playerPosition[0] + 1][playerPosition[1] + 1];	// 0 0 X
 			if (vectorField[playerPosition[0]][playerPosition[1]] % 10 == 0)
 				vectorField[playerPosition[0]][playerPosition[1]] = 41;	// Came from
 			break;
@@ -225,13 +318,21 @@ void vectorMoveTo(std::vector<std::vector<unsigned char>> &vectorField, unsigned
 
 				playerPosition[0]++;	// Reset Player Position because adding row led to offset
 			}
-			vectorField[playerPosition[0] - 1][playerPosition[1] - 1] = viewToVectorSight(fieldOfView[0][0]);	// X X X
-			vectorField[playerPosition[0] - 1][playerPosition[1]] = viewToVectorSight(fieldOfView[0][1]);		// 0 0 0
-			vectorField[playerPosition[0] - 1][playerPosition[1] + 1] = viewToVectorSight(fieldOfView[0][2]);	// 0 0 0
+			vectorField[playerPosition[0] - 1][playerPosition[1] - 1] = (vectorField[playerPosition[0] - 1][playerPosition[1] - 1] == 0) 
+				? viewToVectorSight(fieldOfView[0][0])
+				: vectorField[playerPosition[0] - 1][playerPosition[1] - 1];	// X X X
+			vectorField[playerPosition[0] - 1][playerPosition[1]] = (vectorField[playerPosition[0] - 1][playerPosition[1]] == 0) 
+				? viewToVectorSight(fieldOfView[0][1])
+				: vectorField[playerPosition[0] - 1][playerPosition[1]];		// 0 0 0
+			vectorField[playerPosition[0] - 1][playerPosition[1] + 1] = (vectorField[playerPosition[0] - 1][playerPosition[1] + 1] == 0) 
+				? viewToVectorSight(fieldOfView[0][2])
+				: vectorField[playerPosition[0] - 1][playerPosition[1] + 1];	// 0 0 0
 			if (vectorField[playerPosition[0]][playerPosition[1]] % 10 == 0)
 				vectorField[playerPosition[0]][playerPosition[1]] = 42;	// Came from
 		break;
 	}
+
+	vectorMoveTo(vectorField, getNextStep(vectorFieldOfView(vectorField, playerPosition)), playerPosition);
 }
 
 #pragma endregion
@@ -252,7 +353,7 @@ void findExit(int subtask, char fieldOfView[3][3])
 		vectorField.push_back(temp);
 	}
 
-	vectorMoveTo(vectorField, 2, playerPosition);
+	vectorMoveTo(vectorField, getNextStep(vectorFieldOfView(vectorField, playerPosition)), playerPosition);
 }
 
 

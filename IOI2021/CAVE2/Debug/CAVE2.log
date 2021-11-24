@@ -1,8 +1,12 @@
 ﻿  CAVE2.cpp
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(121,60): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned char', possible loss of data
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(178,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(194,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(208,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(223,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(167): warning C4715: 'viewToVectorSight': not all control paths return a value
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(95,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(97,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(212,23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(213,60): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned char', possible loss of data
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(253,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(275,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(295,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(316,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(76): warning C4715: 'viewToVectorSight': not all control paths return a value
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVE2\CAVE2.cpp(336): warning C4717: 'vectorMoveTo': recursive on all control paths, function will cause runtime stack overflow
   CAVE2.vcxproj -> C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\Debug\CAVE2.exe
