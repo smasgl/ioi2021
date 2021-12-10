@@ -52,8 +52,6 @@ void printFielOfView(char fieldOfView[3][3])
 		}
 		std::cout << '\n';
 	}
-
-	std::cout << "--------------------\n";
 }
 
 unsigned char viewToVectorSight(char field)
@@ -241,7 +239,6 @@ unsigned char** vectorFieldOfView(std::vector<std::vector<unsigned char>> vector
 
 void vectorMoveTo(std::vector<std::vector<unsigned char>> &vectorField, unsigned char direction, int* playerPosition)
 {
-	//std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	drawField(vectorField);
 	switch (direction)
 	{
@@ -372,5 +369,6 @@ int main()
 	makeFieldOfView();
 	findExit(s, fieldOfView);
 	printf("Ausgang nicht gefunden\n");
+
 	return 0;
 }

@@ -1,0 +1,36 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "443f8994-8da8-4c31-87cf-c119c4e7e21d": {
+      "ProjectGuid": "443f8994-8da8-4c31-87cf-c119c4e7e21d",
+      "DisplayName": "CAVE2",
+      "ColorIndex": 0
+    },
+    "9815b5e8-db56-4026-91ef-bf8073093716": {
+      "ProjectGuid": "9815b5e8-db56-4026-91ef-bf8073093716",
+      "DisplayName": "CAVE0",
+      "ColorIndex": 1
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Sonstige Dateien",
+      "ColorIndex": -1
+    },
+    "a1c41508-7e79-4c36-902e-74f1275c6881": {
+      "ProjectGuid": "a1c41508-7e79-4c36-902e-74f1275c6881",
+      "DisplayName": "CAVE",
+      "ColorIndex": 2
+    },
+    "32b8866f-ddf9-476a-aec1-afa15067ffe5": {
+      "ProjectGuid": "32b8866f-ddf9-476a-aec1-afa15067ffe5",
+      "DisplayName": "CAVE7",
+      "ColorIndex": 3
+    },
+    "38076429-5369-4f22-8f53-e37a75706804": {
+      "ProjectGuid": "38076429-5369-4f22-8f53-e37a75706804",
+      "DisplayName": "CAVEX",
+      "ColorIndex": 4
+    }
+  },
+  "NextColorIndex": 5
+}
