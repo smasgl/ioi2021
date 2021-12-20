@@ -30,7 +30,27 @@
       "ProjectGuid": "38076429-5369-4f22-8f53-e37a75706804",
       "DisplayName": "CAVEX",
       "ColorIndex": 4
+    },
+    "1199807a-2506-4aac-9cb2-c97d5b29fa2b": {
+      "ProjectGuid": "1199807a-2506-4aac-9cb2-c97d5b29fa2b",
+      "DisplayName": "TREA1",
+      "ColorIndex": 5
+    },
+    "e9778f12-a442-4f29-81f8-eca4fa604bc4": {
+      "ProjectGuid": "e9778f12-a442-4f29-81f8-eca4fa604bc4",
+      "DisplayName": "TREA2",
+      "ColorIndex": 6
+    },
+    "3abdcee3-9548-424e-bf82-a88c0a8ceebf": {
+      "ProjectGuid": "3abdcee3-9548-424e-bf82-a88c0a8ceebf",
+      "DisplayName": "TREA3",
+      "ColorIndex": 7
+    },
+    "9251c869-015a-487b-839c-a509dd46ddb9": {
+      "ProjectGuid": "9251c869-015a-487b-839c-a509dd46ddb9",
+      "DisplayName": "TREA4",
+      "ColorIndex": 8
     }
   },
-  "NextColorIndex": 5
+  "NextColorIndex": 9
 }

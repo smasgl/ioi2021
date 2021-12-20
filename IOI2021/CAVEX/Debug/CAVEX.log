@@ -1,0 +1,3 @@
+﻿  CAVEX.cpp
+C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\CAVEX\CAVEX.cpp(241): warning C4715: "invertFrom": Nicht alle Codepfade geben einen Wert zurück.
+  CAVEX.vcxproj -> C:\Users\lwnmas9\Documents\Github\ioi2021\IOI2021\Debug\CAVEX.exe

@@ -8,7 +8,14 @@ static const int MAX_N = 1005;
 static int r, c, steps, max_steps;
 static char grid[MAX_N][MAX_N], fieldOfView[3][3];
 
-static char walkedX[2000], walkedY[2000] = { 0 };
+static char walkedXY[2000][2000] = { 0 };
+
+// Prototypes
+void moveToAdapter(unsigned char moveTo, char walkedXY[2000][2000], int& positionX, int& positionY);
+void validateAndMove(char fieldOfView[3][3], unsigned char moveTo, char walkedXY[2000][2000], int& positionX, int& positionY);
+void findFinish(char fieldOfView[3][3], unsigned char fromDirection, char walkedXY[2000][2000], int& positionX, int& positionY);
+unsigned char isDirectionAvailable(char fieldOfView[3][3], unsigned char moveTo, char walkedXY[2000][2000], int& positionX, int& positionY);
+unsigned char invertFrom(unsigned char moveTo);
 
 static void makeFieldOfView()
 {
@@ -77,7 +84,7 @@ unsigned char checkObject(char objectLetter)
 // down		=> 2
 // right	=> 3
 // up		=> 4
-unsigned char getNextDirection(char fieldOfView[3][3])
+unsigned char finishInView(char fieldOfView[3][3])
 {
 	// Next To Finish
 	if (fieldOfView[0][1] == 'X') // up
@@ -122,48 +129,114 @@ unsigned char getNextDirection(char fieldOfView[3][3])
 	return 0;
 }
 
-void findExit(int subtask, char fieldOfView[3][3], unsigned char fromDirection, char walkedX[2000], char walkedY[2000])
+void moveToAdapter(unsigned char moveTo, char walkedXY[2000][2000], int &positionX, int &positionY)
 {
-	// Cod
-	
-	unsigned char nextDirection = getNextDirection(fieldOfView);
+	switch (moveTo)
+	{
+	case 1:
+		// Move left.
+		positionX--;
+		left();
+		break;
+	case 2:
+		// Move down.
+		positionY--;
+		down();
+		break;
+	case 3:
+		// Move right.
+		positionX++;
+		right();
+		break;
+	case 4:
+		// Move up.
+		positionY++;
+		up();
+		break;
+	}
 
-	if (nextDirection != 0)
-		moveToAdapter(nextDirection);
-
-
-	// Finish not Found
-	// Rekursiv call
-	findExit(subtask, fieldOfView, 1, walkedX, walkedY);
-	findExit(subtask, fieldOfView, 2, walkedX, walkedY);
-	findExit(subtask, fieldOfView, 3, walkedX, walkedY);
-	findExit(subtask, fieldOfView, 4, walkedX, walkedY);
-
-	// Step back
-
-
+	walkedXY[positionX][positionY] = 1;
 }
 
-void moveToAdapter(unsigned char direction)
+void validateAndMove(char fieldOfView[3][3], unsigned char moveTo, char walkedXY[2000][2000], int &positionX, int &positionY)
 {
-	switch (direction)
+	if (!isDirectionAvailable(fieldOfView, moveTo, walkedXY, positionX, positionY))
+		return;
+
+	moveToAdapter(moveTo, walkedXY, positionX, positionY);
+	findFinish(fieldOfView, invertFrom(moveTo), walkedXY, positionX, positionY);
+}
+
+void findFinish(char fieldOfView[3][3], unsigned char fromDirection, char walkedXY[2000][2000], int &positionX, int &positionY)
+{
+	// Check if finish is in view
+	unsigned char finish = finishInView(fieldOfView);
+	if (finish != 0)
+	{
+		moveToAdapter(finish, walkedXY, positionX, positionY);
+		finish = finishInView(fieldOfView);
+		moveToAdapter(finish, walkedXY, positionX, positionY);
+		throw;	// Throw if this code is reached => Already found finish
+	}
+
+	//If there is no next step => return
+	validateAndMove(fieldOfView, 1, walkedXY, positionX, positionY);
+	validateAndMove(fieldOfView, 2, walkedXY, positionX, positionY);
+	validateAndMove(fieldOfView, 3, walkedXY, positionX, positionY);
+	validateAndMove(fieldOfView, 4, walkedXY, positionX, positionY);
+
+	moveToAdapter(fromDirection, walkedXY, positionX, positionY);
+}
+
+unsigned char isDirectionAvailable(char fieldOfView[3][3], unsigned char moveTo, char walkedXY[2000][2000], int &positionX, int &positionY)
+{
+	switch (moveTo)
 	{
 		case 1:
 			// Move left.
-			left();
+			if (walkedXY[positionX - 1][positionY] == 1)
+				return 0;
+			if (fieldOfView[1][0] != '.')
+				return 0;
 			break;
 		case 2:
 			// Move down.
-			down();
+			if (walkedXY[positionX][positionY-1] == 1)
+				return 0;
+			if (fieldOfView[2][1] != '.')
+				return 0;
 			break;
 		case 3:
 			// Move right.
-			right();
+			if (walkedXY[positionX + 1][positionY] == 1)
+				return 0;
+			if (fieldOfView[1][2] != '.')
+				return 0;
 			break;
 		case 4:
 			// Move up.
-			up();
+			if (walkedXY[positionX][positionY+1] == 1)
+				return 0;
+			if (fieldOfView[0][1] != '.')
+				return 0;
 			break;
+	}
+
+	return 1;
+}
+
+unsigned char invertFrom(unsigned char moveTo)
+{
+	switch (moveTo)
+	{
+		case 1:
+			return 3;
+		case 2:
+			return 4;
+		case 3:
+			return 1;
+		case 4:
+			return 2;
 	}
 }
 
@@ -181,7 +254,10 @@ int main()
 				r = i, c = j;
 	}
 	makeFieldOfView();
-	findExit(s, fieldOfView);
+	int positionX = 1000;
+	int positionY = 1000;
+	walkedXY[1000][1000] = 1;
+	findFinish(fieldOfView, 1, walkedXY, positionX, positionY);
 	printf("Ausgang nicht gefunden\n");
 
 	return 0;
