@@ -1,72 +1,75 @@
 #include "treasure.h"
+#include <iostream>
 
-int mainSearchColumns(unsigned char N, int row, int from, int to, int requiredTreasures)
+void mainSearchColumns(unsigned char N, int row, int requiredTreasures)
 {
-	int foundTreasures = 0;
-	int fields = (to - from + 1);
+	int lookedUp = 0;
 
-	if (foundTreasures == requiredTreasures)
-		return foundTreasures;
-
-	if (requiredTreasures == fields)	// All fields are trasures
+	for (unsigned char i = 1; i <= (N / 2); i++)
 	{
-		for (int i = from; i <= to; i++)
-		{
+		unsigned char restColumnTreasures = getNumberOfTreasuresInArea(row, i+1, row, N);
+		unsigned char thisColumnTrasures = requiredTreasures - restColumnTreasures - lookedUp;
+		if(thisColumnTrasures == 1)
 			reportTreasure(row, i);
-		}
-		return fields;
+		lookedUp += thisColumnTrasures;
 	}
 
-	int seperator = from + ((to - from) / 2);
+	for (unsigned char i = (N / 2) + 1; i <= N; i++)
+	{
+		if (i == N)
+		{
+			// last element take allTreasures and subtract lookedUp Trasures
+			unsigned char thisColumnTrasures = requiredTreasures - lookedUp;
+			if (thisColumnTrasures == 1)
+				reportTreasure(row, i);
+			lookedUp += thisColumnTrasures;
+			continue;
+		}
 
-	int subSearchColumns1 = getNumberOfTreasuresInArea(row, from, row, seperator);
-	if (subSearchColumns1 != 0)
-		foundTreasures += mainSearchColumns(N, row, from, seperator, subSearchColumns1);
-
-	if (foundTreasures == requiredTreasures)
-		return foundTreasures;
-
-	int subSearchColumns2 = requiredTreasures - foundTreasures;
-	if (subSearchColumns2 != 0)
-		foundTreasures += mainSearchColumns(N, row, seperator + 1, to, subSearchColumns2);
-
-	return foundTreasures;
+		unsigned char restColumnAndThisColumnTreasures = getNumberOfTreasuresInArea(row, 1, row, i);
+		unsigned char thisColumnTrasures = restColumnAndThisColumnTreasures - lookedUp;
+		if (thisColumnTrasures == 1)
+			reportTreasure(row, i);
+		lookedUp += thisColumnTrasures;
+	}
 }
 
-int mainSearchRows(unsigned char N, int from, int to, int requiredTreasures)
+void mainSearchRows(unsigned char N, int allTreasures)
 {
-	int foundTreasures = 0;
+	int lookedUp = 0;
 
-	if (foundTreasures == requiredTreasures)
-		return foundTreasures;
-
-	if (from == to)
+	for (unsigned char i = 1; i <= (N / 2); i++)
 	{
-		// switch to column search
-		return mainSearchColumns(N, from, 1, N, requiredTreasures);
+		unsigned char restRowTreasures = getNumberOfTreasuresInArea(i + 1, 1, N, N);
+		unsigned char thisRowTrasures = allTreasures - restRowTreasures - lookedUp;
+		if(thisRowTrasures >= 1)
+			mainSearchColumns(N, i, thisRowTrasures);
+		lookedUp += thisRowTrasures;
 	}
 
-	int seperator = from + ((to - from) / 2);
+	for (unsigned char i = (N / 2) + 1; i <= N; i++)
+	{
+		if (i == N)
+		{
+			// last element take allTreasures and subtract lookedUp Trasures
+			unsigned char thisRowTrasures = allTreasures - lookedUp;
+			if (thisRowTrasures >= 1)
+				mainSearchColumns(N, i, thisRowTrasures);
+			lookedUp += thisRowTrasures;
+			continue;
+		}
 
-	int subSearchRows1 = getNumberOfTreasuresInArea(from, 1, seperator, N);
-	if (subSearchRows1 != 0)
-		foundTreasures += mainSearchRows(N, from, seperator, subSearchRows1);
-
-	if (foundTreasures == requiredTreasures)
-		return foundTreasures;
-
-	int subSearchRows2 = requiredTreasures - foundTreasures;
-	if (subSearchRows2 != 0)
-		foundTreasures += mainSearchRows(N, seperator + 1, to, subSearchRows2);
-
-	return foundTreasures;
+		unsigned char restRowAndThisRowTreasures = getNumberOfTreasuresInArea(1, 1, i, N);
+		unsigned char thisRowTrasures = restRowAndThisRowTreasures - lookedUp;
+		if (thisRowTrasures >= 1)
+			mainSearchColumns(N, i, thisRowTrasures);
+		lookedUp += thisRowTrasures;
+	}
 }
 
 
 void findTreasure(int N)
 {
 	int globalTreasures = getNumberOfTreasuresInArea(1, 1, N, N);
-	mainSearchRows(N, 1, N, globalTreasures);
+	mainSearchRows(N, globalTreasures);
 }
-
-
