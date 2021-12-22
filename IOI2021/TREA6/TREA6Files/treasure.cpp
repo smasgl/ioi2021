@@ -64,6 +64,15 @@ void subSearchColumns(unsigned char N, unsigned char requiredTreasures, unsigned
 {
 	unsigned char seperator = N / 2;
 
+	if (requiredTreasures == N)
+	{
+		for (unsigned char i = 1; i <= N; i++)
+		{
+			reportTreasure(row, i);
+		}
+		return;
+	}
+
 	unsigned char otherRowTreasures = getNumberOfTreasuresInArea(row, seperator + 1, row, N);
 	unsigned char otherTreasures = 0;
 	subSearchColumnsFront(N, requiredTreasures - otherRowTreasures, otherTreasures, requiredTreasures, row, 1, seperator);
