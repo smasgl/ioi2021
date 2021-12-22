@@ -6,7 +6,9 @@ int mainSearchColumns(unsigned char N, int row, int from, int to, int requiredTr
 	int foundTreasures = 0;
 	int fields = (to - from + 1);
 
-	if (foundTreasures == requiredTreasures)
+	int possibleZeros = fields - requiredTreasures;
+
+	if (foundTreasures >= requiredTreasures)
 		return foundTreasures;
 
 	if (requiredTreasures == fields)	// All fields are trasures
@@ -24,36 +26,78 @@ int mainSearchColumns(unsigned char N, int row, int from, int to, int requiredTr
 	if (subSearchColumns1 != 0)
 		foundTreasures += mainSearchColumns(N, row, from, seperator, subSearchColumns1);
 
-	if (foundTreasures == requiredTreasures)
+	int foundZeros = seperator - from + 1 - subSearchColumns1;
+
+	if (foundZeros == possibleZeros)
+	{
+		unsigned char foundTreasuresFor = 0;
+		for (int i = seperator + 1; i <= to; i++)
+		{
+			reportTreasure(row, i);
+			foundTreasuresFor++;
+		}
+		return foundTreasuresFor + foundTreasures;
+	}
+
+ 	if (foundTreasures >= requiredTreasures)
 		return foundTreasures;
 
 	int subSearchColumns2 = requiredTreasures - foundTreasures;
 	if (subSearchColumns2 != 0)
 		foundTreasures += mainSearchColumns(N, row, seperator + 1, to, subSearchColumns2);
 
+	foundZeros += to - seperator + 1 - subSearchColumns2;
+
+	if (foundZeros == possibleZeros)
+	{
+		unsigned char foundTreasuresFor = 0;
+		for (int i = seperator + 1; i <= to; i++)
+		{
+			reportTreasure(row, i);
+			foundTreasuresFor++;
+		}
+		return foundTreasuresFor + foundTreasures;
+	}
+
 	return foundTreasures;
 }
 
 void mainSearchRows(unsigned char N, int allTreasures)
 {
-	int foundTreasures = 0;
-	for (unsigned char i = 1 + 1; i <= (N / 2) + 1; i++)
-	{
-		int treasures = allTreasures - getNumberOfTreasuresInArea(i, 1, N, N) - foundTreasures;
-		if (treasures > 0)
-			mainSearchColumns(N, i - 1, 1, N, treasures);
+	int lookedUp = 0;
 
-		foundTreasures += treasures;
+	for (unsigned char i = 1; i <= (N / 2); i++)
+	{
+		if (lookedUp == allTreasures)
+			return;
+
+		unsigned char restRowTreasures = getNumberOfTreasuresInArea(i + 1, 1, N, N);
+		unsigned char thisRowTrasures = allTreasures - restRowTreasures - lookedUp;
+		if (thisRowTrasures >= 1)
+			mainSearchColumns(N, i, 1, N, thisRowTrasures);
+		lookedUp += thisRowTrasures;
 	}
 
-	foundTreasures = 0;
-	for (unsigned char i = N - 1; i >= (N / 2) - 1; i--)
+	for (unsigned char i = (N / 2) + 1; i <= N; i++)
 	{
-		int treasures = allTreasures - getNumberOfTreasuresInArea(1, 1, i, N) - foundTreasures;
-		if (treasures > 0)
-			mainSearchColumns(N, i + 1, 1, N, treasures);
+		if (lookedUp == allTreasures)
+			return;
 
-		foundTreasures += treasures;
+		if (i == N)
+		{
+			// last element take allTreasures and subtract lookedUp Trasures
+			unsigned char thisRowTrasures = allTreasures - lookedUp;
+			if (thisRowTrasures >= 1)
+				mainSearchColumns(N, i, 1, N, thisRowTrasures);
+			lookedUp += thisRowTrasures;
+			continue;
+		}
+
+		unsigned char restRowAndThisRowTreasures = getNumberOfTreasuresInArea(1, 1, i, N);
+		unsigned char thisRowTrasures = restRowAndThisRowTreasures - lookedUp;
+		if (thisRowTrasures >= 1)
+			mainSearchColumns(N, i, 1, N, thisRowTrasures);
+		lookedUp += thisRowTrasures;
 	}
 }
 
