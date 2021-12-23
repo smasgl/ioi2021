@@ -1,6 +1,25 @@
 #include "treasure.h"
 #include <iostream>
 
+// Use the global treasure count to search 4 a bigger space and subtract the treasure count of the other areas
+
+unsigned char checkedFields[100][100] = { 0 };
+
+int getPastColumnTreasures(unsigned char row, unsigned char from, unsigned char to)
+{
+	int counter = 0;
+	for (unsigned char i = 0; i < row - 1; i++)
+	{
+		for (unsigned char k = from-1; k < to; k++)
+		{
+			if (checkedFields[i][k] == 1)
+				counter++;
+		}
+	}
+
+	return counter;
+}
+
 void subSearchColumnsFront(unsigned char N, unsigned char requiredTreasures, unsigned char& otherTreasures, unsigned char allTreasures, unsigned char row, unsigned char from, unsigned char to)
 {
 	unsigned char fieldCount = to - from + 1;
@@ -10,6 +29,7 @@ void subSearchColumnsFront(unsigned char N, unsigned char requiredTreasures, uns
 		for (unsigned char i = from; i <= to; i++)
 		{
 			reportTreasure(row, i);
+			checkedFields[row - 1][i - 1] = 1;
 			otherTreasures++;
 		}
 
@@ -18,7 +38,7 @@ void subSearchColumnsFront(unsigned char N, unsigned char requiredTreasures, uns
 
 	unsigned char seperator = (to - from + 1) / 2 + from - 1;
 
-	unsigned char otherRowTreasures = getNumberOfTreasuresInArea(row, seperator + 1, row, N) + otherTreasures;
+	unsigned char otherRowTreasures = getNumberOfTreasuresInArea(1, seperator + 1, row, N) + otherTreasures - getPastColumnTreasures(row, seperator + 1, N);
 	unsigned char thisRowTreasures = allTreasures - otherRowTreasures;
 	if (thisRowTreasures >= 1)
 		subSearchColumnsFront(N, thisRowTreasures, otherTreasures, allTreasures, row, from, seperator);
@@ -40,6 +60,7 @@ void subSearchColumnsBack(unsigned char N, unsigned char requiredTreasures, unsi
 		for (unsigned char i = from; i <= to; i++)
 		{
 			reportTreasure(row, i);
+			checkedFields[row - 1][i - 1] = 1;
 			otherTreasures++;
 		}
 
@@ -48,7 +69,7 @@ void subSearchColumnsBack(unsigned char N, unsigned char requiredTreasures, unsi
 
 	unsigned char seperator = (to - from + 1) / 2 + from - 1;
 
-	unsigned char thisRowTreasures = getNumberOfTreasuresInArea(row, 1, row, seperator) - otherTreasures;
+	unsigned char thisRowTreasures = getNumberOfTreasuresInArea(1, 1, row, seperator) - otherTreasures - getPastColumnTreasures(row, 1, seperator);
 	if (thisRowTreasures >= 1)
 		subSearchColumnsBack(N, thisRowTreasures, otherTreasures, allTreasures, row, from, seperator);
 
@@ -69,11 +90,12 @@ void subSearchColumns(unsigned char N, unsigned char requiredTreasures, unsigned
 		for (unsigned char i = 1; i <= N; i++)
 		{
 			reportTreasure(row, i);
+			checkedFields[row - 1][i - 1] = 1;
 		}
 		return;
 	}
 
-	unsigned char otherRowTreasures = getNumberOfTreasuresInArea(row, seperator + 1, row, N);
+	unsigned char otherRowTreasures = getNumberOfTreasuresInArea(1, seperator + 1, row, N) - getPastColumnTreasures(row, seperator + 1, N);
 	unsigned char otherTreasures = 0;
 	subSearchColumnsFront(N, requiredTreasures - otherRowTreasures, otherTreasures, requiredTreasures, row, 1, seperator);
 	subSearchColumnsBack(N, otherRowTreasures, otherTreasures, requiredTreasures, row, seperator + 1, N);
@@ -117,7 +139,6 @@ void mainSearchRows(unsigned char N, int allTreasures)
 		lookedUp += thisRowTrasures;
 	}
 }
-
 
 void findTreasure(int N)
 {
