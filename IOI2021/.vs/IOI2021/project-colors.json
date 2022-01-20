@@ -80,7 +80,12 @@
       "ProjectGuid": "3a75dd8d-f528-48c4-8008-6b93039e481d",
       "DisplayName": "TREA6",
       "ColorIndex": 14
+    },
+    "be77fd01-737e-43dc-9be2-96b03965b834": {
+      "ProjectGuid": "be77fd01-737e-43dc-9be2-96b03965b834",
+      "DisplayName": "POOL6",
+      "ColorIndex": 15
     }
   },
-  "NextColorIndex": 15
+  "NextColorIndex": 0
 }
