@@ -1,5 +1,5 @@
 [![Version: 1.0 Release](https://shields.io/badge/Qualification-%20Passed-green.svg)](https://github.com/smasgl/ioi2021)
-# IOI2021
+# IOI2022
 
 ## Description
 
